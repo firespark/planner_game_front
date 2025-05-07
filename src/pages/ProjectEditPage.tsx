@@ -1,12 +1,12 @@
 import { Container } from '@mui/material';
 import Title from '../components/Layout/Title';
-import ProjectCreate from '../components/Projects/ProjectCreate';
+import ProjectEdit from '../components/Projects/ProjectEdit';
 
 function ProjectCreatePage() {
   return (
     <Container style={{ marginTop: 40 }}>
-      <Title title="Create Project" />
-      <ProjectCreate />
+      <Title title="Edit Project" />
+      <ProjectEdit />
     </Container>
   );
 }
