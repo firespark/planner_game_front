@@ -1,8 +1,7 @@
-// src/App.tsx
 import ProjectForm from '../components/ProjectForm';
 import { Container } from '@mui/material';
 
-function App() {
+function ProjectCreatePage() {
   return (
     <Container style={{ marginTop: 40 }}>
       <ProjectForm />
@@ -10,4 +9,4 @@ function App() {
   );
 }
 
-export default App;
+export default ProjectCreatePage;

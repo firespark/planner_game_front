@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   TextField,
   Button,
@@ -23,6 +24,8 @@ const ProjectForm: React.FC = () => {
   const [minimumPercentage, setMinimumPercentage] = useState(70);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     setError(null);
@@ -51,8 +54,8 @@ const ProjectForm: React.FC = () => {
 
       const data = await res.json();
 
-      if (data.success) {
-        setSuccess(true);
+      if (data.success && data.project_id) {
+        navigate(`/project/${data.project_id}`);
       } else {
         setError('Failed to create the project.');
       }
