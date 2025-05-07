@@ -9,7 +9,7 @@ const ProjectDetails: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/projects/dates')
+    fetch(`/api/projects/${id}/dates`)
       .then(res => res.json())
       .then(data => {
         setSegmentDates(data);
