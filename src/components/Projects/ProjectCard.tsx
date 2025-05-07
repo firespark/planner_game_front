@@ -2,18 +2,18 @@ import { Paper, Typography, LinearProgress, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { ProjectData } from '../../types';
 
+type Props = Omit<ProjectData, 'segment_length' | 'total_segments' | 'minimum_percentage'>;
+
 const ProjectCard = ({
   id,
   title,
   start_date,
-  segment_length,
-  total_segments,
-  minimum_percentage,
-  total_points
-}: ProjectData) => {
+  total_points,
+  end_date,
+  max_points
+}: Props) => {
   const navigate = useNavigate();
-  //const percentage = Math.round((total_points / max_points) * 100);
-  const percentage = minimum_percentage;
+  const percentage = Math.round((total_points / max_points) * 100);
 
   return (
     <Paper style={{ padding: 20 }}>
@@ -25,13 +25,13 @@ const ProjectCard = ({
         {title}
       </Typography>
       <Typography color="textSecondary">
-        {start_date}
+        {start_date} - {end_date}
       </Typography>
 
       <div style={{ marginTop: 12 }}>
         <LinearProgress variant="determinate" value={percentage} />
         <Typography variant="body2" style={{ marginTop: 4 }}>
-          {total_points} / {total_points} points
+          {total_points} / {max_points} points
         </Typography>
       </div>
 

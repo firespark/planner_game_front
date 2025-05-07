@@ -6,6 +6,8 @@ export interface ProjectData {
     total_segments: number;
     minimum_percentage: number;
     total_points: number;
+    end_date: string;
+    max_points: number;
 }
 
 
