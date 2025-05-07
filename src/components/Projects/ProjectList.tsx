@@ -1,31 +1,49 @@
-import { Stack } from '@mui/material';
+import { Stack, CircularProgress } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { ProjectData } from '../../types';
 import ProjectCard from './ProjectCard';
 
-const dummyProjects = [
-  {
-    id: 1,
-    title: 'Project A',
-    start_date: '2025-05-01',
-    end_date: '2025-06-01',
-    total_points: 90,
-    max_points: 100,
-  },
-  {
-    id: 2,
-    title: 'Project B',
-    start_date: '2025-05-07',
-    end_date: '2025-07-01',
-    total_points: 45,
-    max_points: 60,
-  },
-];
-
 const ProjectList = () => {
+  const [projects, setProjects] = useState<ProjectData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch('/api/projects');
+        if (!response.ok) {
+          throw new Error('Failed to fetch projects');
+        }
+        const data = await response.json();
+        setProjects(data);
+      } catch (err) {
+        setError('Failed to load projects');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  if (loading) {
+    return <CircularProgress />;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+
   return (
     <Stack spacing={3}>
-      {dummyProjects.map((project) => (
-        <ProjectCard key={project.id} {...project} />
-      ))}
+      {projects.length === 0 ? (
+        null
+      ) : (
+        projects.map((project) => (
+          <ProjectCard key={project.id} {...project} />
+        ))
+      )}
     </Stack>
   );
 };
