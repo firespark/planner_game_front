@@ -8,58 +8,45 @@ import SegmentList from '../components/Segments/SegmentList';
 const ProjectDetails = () => {
   const { id } = useParams();
   const [segments, setSegments] = useState<SegmentData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const example: SegmentData[] = [
-      {
-        id: 1,
-        type: 'past',
-        slots: [
-          {
-            date: '2025-05-01',
-            tasks: [
-              { id: 1, title: 'Past Task 1', completed: true, points: 80 },
-              { id: 2, title: 'Past Task 2', completed: false, points: 30 },
-            ],
-          },
-        ],
-      },
-      {
-        id: 2,
-        type: 'current',
-        slots: Array.from({ length: 7 }, (_, i) => {
-          const date = new Date();
-          date.setDate(date.getDate() + i);
-          return {
-            date: date.toISOString().slice(0, 10),
-            tasks: [
-              { id: 10 + i, title: `Task ${i + 1}`, completed: false, points: 30 },
-            ],
-          };
-        }),
-      },
-      {
-        id: 3,
-        type: 'future',
-        slots: [
-          {
-            date: '2025-06-01',
-            tasks: [],
-          },
-        ],
-      },
-    ];
-    setSegments(example);
-    setLoading(false);
-  }, []);
+    const fetchSegments = async () => {
+      try {
+        const response = await fetch(`/api/projects/${id}/dates`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch segments');
+        }
 
-  if (loading) return <CircularProgress />;
+        const data = await response.json();
+        setSegments(data);
+      } catch (err) {
+        setError('Failed to load segments');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSegments();
+  }, [id]);
+
+  if (loading) {
+    return <CircularProgress />;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
     <Container style={{ marginTop: 40 }}>
       <Title title="Project" />
-      <SegmentList segments={segments} />
+      {segments.length === 0 ? (
+        null
+      ) : (
+        <SegmentList segments={segments} />
+      )}
     </Container>
   );
 };
