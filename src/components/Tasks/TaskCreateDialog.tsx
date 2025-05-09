@@ -16,36 +16,33 @@ interface Props {
 
 const TaskCreateDialog = ({ open, onClose, onCreate }: Props) => {
   const [title, setTitle] = useState('');
-  const [points, setPoints] = useState(1);
+  const [points, setPoints] = useState(60);
 
   const handleSubmit = () => {
-    if (title.trim()) {
+    if (title.trim() && points) {
       onCreate(title.trim(), points);
       setTitle('');
-      setPoints(1);
     }
   };
 
   const handleClose = () => {
-    setTitle('');
-    setPoints(1);
     onClose();
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Создание задачи</DialogTitle>
+      <DialogTitle>Create Task</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
-          label="Название"
+          label="Title"
           fullWidth
           margin="normal"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
         <TextField
-          label="Баллы"
+          label="Points"
           type="number"
           fullWidth
           margin="normal"
@@ -55,8 +52,8 @@ const TaskCreateDialog = ({ open, onClose, onCreate }: Props) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Отмена</Button>
-        <Button onClick={handleSubmit} variant="contained">Создать</Button>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleSubmit} variant="contained">Create</Button>
       </DialogActions>
     </Dialog>
   );

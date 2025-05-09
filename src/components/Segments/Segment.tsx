@@ -4,11 +4,12 @@ import Slot from '../Slots/Slot';
 
 interface Props {
   segment: SegmentData;
+  project_id: number;
   isActive: boolean;
   onActivate: () => void;
 }
 
-const Segment = ({ segment, isActive, onActivate }: Props) => {
+const Segment = ({ segment, project_id, isActive, onActivate }: Props) => {
   const colorMap = {
     past: '#e0e0e0',
     current: '#1976d2',
@@ -34,7 +35,7 @@ const Segment = ({ segment, isActive, onActivate }: Props) => {
           <Grid container spacing={2}>
             {segment.slots.map((slot, index) => (
               <Grid item size={{ xs: 12, sm: 6, md: 3 }} key={index}>
-                <Slot slot={slot} />
+                <Slot slot={slot} project_id={project_id} />
               </Grid>
             ))}
           </Grid>

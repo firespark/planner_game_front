@@ -8,9 +8,11 @@ import TaskCreateDialog from './TaskCreateDialog';
 
 interface Props {
   tasks: TaskData[];
+  date: string;
+  project_id: number;
 }
 
-const TaskList = ({ tasks: initialTasks }: Props) => {
+const TaskList = ({ tasks: initialTasks, date, project_id }: Props) => {
   const [tasks, setTasks] = useState<TaskData[]>(initialTasks);
   const [selectedTask, setSelectedTask] = useState<TaskData | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -39,15 +41,33 @@ const TaskList = ({ tasks: initialTasks }: Props) => {
   };
 
   const handleCreate = (title: string, points: number) => {
-    const newTask: TaskData = {
-      id: Date.now(),
-      title,
-      points,
-      completed: false,
-    };
-    setTasks((prev) => [...prev, newTask]);
+    fetch('/api/tasks/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title,
+        points,
+        date,
+        project_id
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          const newTask: TaskData = {
+            id: data.id,
+            title,
+            points,
+            completed: false,
+            date
+          };
+          setTasks((prev) => [...prev, newTask]);
+        }
+      });
+
     setCreateDialogOpen(false);
-  };
+  }
+
 
   const undoneTasks = tasks.filter((t) => !t.completed);
   const doneTasks = tasks.filter((t) => t.completed);

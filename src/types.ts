@@ -24,6 +24,7 @@ export interface TaskData {
     title: string;
     completed: boolean;
     points: number;
+    date: string;
 }
 
 export interface SlotData {

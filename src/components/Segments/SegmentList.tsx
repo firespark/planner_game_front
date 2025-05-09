@@ -4,9 +4,10 @@ import Segment from './Segment';
 
 interface Props {
   segments: SegmentData[];
+  project_id: number;
 }
 
-const SegmentList = ({ segments }: Props) => {
+const SegmentList = ({ segments, project_id }: Props) => {
   const [activeId, setActiveId] = useState<number>(
     segments.find((s) => s.type === 'current')?.id || segments[0].id
   );
@@ -19,6 +20,7 @@ const SegmentList = ({ segments }: Props) => {
           segment={segment}
           isActive={segment.id === activeId}
           onActivate={() => setActiveId(segment.id)}
+          project_id={project_id}
         />
       ))}
     </div>
