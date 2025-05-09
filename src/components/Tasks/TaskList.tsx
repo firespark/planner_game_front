@@ -29,11 +29,22 @@ const TaskList = ({ tasks: initialTasks, date, project_id }: Props) => {
   };
 
   const handleSave = (updatedTask: TaskData) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
-    );
-    handleDialogClose();
+    fetch(`/api/tasks/update/${updatedTask.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: updatedTask.title }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setTasks((prev) =>
+            prev.map((t) => (t.id === updatedTask.id ? { ...t, title: updatedTask.title } : t))
+          );
+          handleDialogClose();
+        }
+      });
   };
+
 
   const handleDelete = (id: number) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));

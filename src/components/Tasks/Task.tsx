@@ -35,7 +35,6 @@ const Task = ({ task, onEdit }: Props) => {
           primary={
             <Stack direction="column" spacing={1}>
               <Typography sx={textStyle}>{task.title}</Typography>
-              {/* Баллы с фоном в зависимости от значения */}
               <Typography
                 sx={textStyle}
                 color="text.secondary"
@@ -43,6 +42,9 @@ const Task = ({ task, onEdit }: Props) => {
                   backgroundColor: getPointsBackgroundColor(task.points),
                   padding: '4px 8px',
                   borderRadius: '4px',
+                  fontSize: '12px',
+                  marginTop: 0,
+                  width: 'fit-content'
                 }}
               >
                 {task.points} pts

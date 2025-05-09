@@ -57,14 +57,6 @@ const TaskEditDialog = ({ open, task, onClose, onSave, onDelete }: Props) => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <TextField
-          label="Баллы"
-          type="number"
-          fullWidth
-          margin="normal"
-          value={points}
-          onChange={(e) => setPoints(Number(e.target.value))}
-        />
         <FormControlLabel
           control={
             <Checkbox
