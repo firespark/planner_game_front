@@ -60,8 +60,22 @@ const TaskList = ({ tasks: initialTasks, date, project_id }: Props) => {
   };
 
   const handleDelete = (id: number) => {
-    setTasks((prev) => prev.filter((t) => t.id !== id));
-    handleDialogClose();
+    fetch(`/api/tasks/delete/${id}`, {
+      method: 'DELETE',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setTasks((prev) => prev.filter((t) => t.id !== id));
+          setError('');
+          handleDialogClose();
+        } else {
+          setError(data.error || 'Failed to delete task');
+        }
+      })
+      .catch(() => {
+        setError('Request failed');
+      });
   };
 
   const handleCreate = (title: string, points: number) => {

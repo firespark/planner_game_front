@@ -8,7 +8,8 @@ import {
   Checkbox,
   FormControlLabel,
   IconButton,
-  Alert
+  Alert,
+  Box
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState, useEffect } from 'react';
@@ -68,14 +69,16 @@ const TaskEditDialog = ({ open, task, onClose, onSave, onDelete, error }: Props)
           label="Done"
         />
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ justifyContent: 'space-between' }}>
         <IconButton onClick={handleDelete} color="error">
           <DeleteIcon />
         </IconButton>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSave} variant="contained">
-          Save
-        </Button>
+        <Box>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={handleSave} variant="contained" sx={{ ml: 1 }}>
+            Save
+          </Button>
+        </Box>
       </DialogActions>
     </Dialog>
   );
