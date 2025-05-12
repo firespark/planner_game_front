@@ -4,7 +4,8 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Button
+  Button,
+  Alert
 } from '@mui/material';
 import { useState } from 'react';
 
@@ -12,17 +13,15 @@ interface Props {
   open: boolean;
   onClose: () => void;
   onCreate: (title: string, points: number) => void;
+  error: string;
 }
 
-const TaskCreateDialog = ({ open, onClose, onCreate }: Props) => {
+const TaskCreateDialog = ({ open, onClose, onCreate, error }: Props) => {
   const [title, setTitle] = useState('');
   const [points, setPoints] = useState(60);
 
   const handleSubmit = () => {
-    if (title.trim() && points) {
-      onCreate(title.trim(), points);
-      setTitle('');
-    }
+    onCreate(title.trim(), points);
   };
 
   const handleClose = () => {
@@ -33,6 +32,7 @@ const TaskCreateDialog = ({ open, onClose, onCreate }: Props) => {
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Create Task</DialogTitle>
       <DialogContent>
+        {error && <Alert severity="error">{error}</Alert>}
         <TextField
           autoFocus
           label="Title"

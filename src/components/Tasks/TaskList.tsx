@@ -17,6 +17,8 @@ const TaskList = ({ tasks: initialTasks, date, project_id }: Props) => {
   const [selectedTask, setSelectedTask] = useState<TaskData | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [error, setError] = useState('');
+
 
   const handleEditClick = (task: TaskData) => {
     setSelectedTask(task);
@@ -26,6 +28,7 @@ const TaskList = ({ tasks: initialTasks, date, project_id }: Props) => {
   const handleDialogClose = () => {
     setDialogOpen(false);
     setSelectedTask(null);
+    setError('');
   };
 
   const handleSave = (updatedTask: TaskData) => {
@@ -40,11 +43,14 @@ const TaskList = ({ tasks: initialTasks, date, project_id }: Props) => {
           setTasks((prev) =>
             prev.map((t) => (t.id === updatedTask.id ? { ...t, title: updatedTask.title } : t))
           );
+          setError('');
           handleDialogClose();
+        } else {
+          setError(data.error || 'Failed to update task');
         }
-      });
+      })
+      .catch(() => setError('Request failed'));
   };
-
 
   const handleDelete = (id: number) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
@@ -73,11 +79,16 @@ const TaskList = ({ tasks: initialTasks, date, project_id }: Props) => {
             date
           };
           setTasks((prev) => [...prev, newTask]);
+          setError('');
+          setCreateDialogOpen(false);
+        } else {
+          setError(data.error || 'Failed to create task');
         }
+      })
+      .catch(() => {
+        setError('Request failed');
       });
-
-    setCreateDialogOpen(false);
-  }
+  };
 
 
   const undoneTasks = tasks.filter((t) => !t.completed);
@@ -111,12 +122,14 @@ const TaskList = ({ tasks: initialTasks, date, project_id }: Props) => {
         onClose={handleDialogClose}
         onSave={handleSave}
         onDelete={handleDelete}
+        error={error}
       />
 
       <TaskCreateDialog
         open={createDialogOpen}
         onClose={() => setCreateDialogOpen(false)}
         onCreate={handleCreate}
+        error={error}
       />
     </Stack>
   );

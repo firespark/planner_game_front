@@ -8,6 +8,7 @@ import {
   Checkbox,
   FormControlLabel,
   IconButton,
+  Alert
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState, useEffect } from 'react';
@@ -19,9 +20,10 @@ interface Props {
   onClose: () => void;
   onSave: (task: TaskData) => void;
   onDelete: (id: number) => void;
+  error: string;
 }
 
-const TaskEditDialog = ({ open, task, onClose, onSave, onDelete }: Props) => {
+const TaskEditDialog = ({ open, task, onClose, onSave, onDelete, error }: Props) => {
   const [title, setTitle] = useState('');
   const [completed, setCompleted] = useState(false);
   const [points, setPoints] = useState(0);
@@ -41,17 +43,18 @@ const TaskEditDialog = ({ open, task, onClose, onSave, onDelete }: Props) => {
 
   const handleDelete = () => {
     if (!task) return;
-    if (confirm('Точно удалить?')) {
+    if (confirm('Confirm deletion?')) {
       onDelete(task.id);
     }
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Редактировать задачу</DialogTitle>
+      <DialogTitle>Edit task</DialogTitle>
       <DialogContent>
+        {error && <Alert severity="error">{error}</Alert>}
         <TextField
-          label="Название"
+          label="title"
           fullWidth
           margin="normal"
           value={title}
@@ -64,7 +67,7 @@ const TaskEditDialog = ({ open, task, onClose, onSave, onDelete }: Props) => {
               onChange={(e) => setCompleted(e.target.checked)}
             />
           }
-          label="Выполнено"
+          label="Done"
         />
       </DialogContent>
       <DialogActions>
