@@ -35,13 +35,20 @@ const TaskList = ({ tasks: initialTasks, date, project_id }: Props) => {
     fetch(`/api/tasks/update/${updatedTask.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: updatedTask.title }),
+      body: JSON.stringify({
+        title: updatedTask.title,
+        completed: updatedTask.completed,
+      }),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           setTasks((prev) =>
-            prev.map((t) => (t.id === updatedTask.id ? { ...t, title: updatedTask.title } : t))
+            prev.map((t) =>
+              t.id === updatedTask.id
+                ? { ...t, title: updatedTask.title, completed: updatedTask.completed }
+                : t
+            )
           );
           setError('');
           handleDialogClose();
@@ -90,6 +97,29 @@ const TaskList = ({ tasks: initialTasks, date, project_id }: Props) => {
       });
   };
 
+  const handleToggleDone = (taskId: number) => {
+    fetch(`/api/tasks/done`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: taskId }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setTasks((prev) =>
+            prev.map((task) =>
+              task.id === taskId ? { ...task, completed: true } : task
+            )
+          );
+          setError('');
+        } else {
+          setError(data.error || 'Failed to mark task as done');
+        }
+      })
+      .catch(() => {
+        setError('Request failed');
+      });
+  };
 
   const undoneTasks = tasks.filter((t) => !t.completed);
   const doneTasks = tasks.filter((t) => t.completed);
@@ -104,14 +134,24 @@ const TaskList = ({ tasks: initialTasks, date, project_id }: Props) => {
 
       <List dense>
         {undoneTasks.map((task) => (
-          <Task key={task.id} task={task} onEdit={() => handleEditClick(task)} />
+          <Task
+            key={task.id}
+            task={task}
+            onEdit={() => handleEditClick(task)}
+            onToggleDone={() => handleToggleDone(task.id)}
+          />
         ))}
       </List>
 
       {doneTasks.length > 0 && (
         <List dense>
           {doneTasks.map((task) => (
-            <Task key={task.id} task={task} onEdit={() => handleEditClick(task)} />
+            <Task
+              key={task.id}
+              task={task}
+              onEdit={() => handleEditClick(task)}
+              onToggleDone={() => handleToggleDone(task.id)}
+            />
           ))}
         </List>
       )}

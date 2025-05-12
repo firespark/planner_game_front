@@ -26,19 +26,17 @@ interface Props {
 const TaskEditDialog = ({ open, task, onClose, onSave, onDelete, error }: Props) => {
   const [title, setTitle] = useState('');
   const [completed, setCompleted] = useState(false);
-  const [points, setPoints] = useState(0);
 
   useEffect(() => {
     if (task) {
       setTitle(task.title);
       setCompleted(task.completed);
-      setPoints(task.points ?? 0);
     }
   }, [task]);
 
   const handleSave = () => {
     if (!task) return;
-    onSave({ ...task, title, completed, points });
+    onSave({ ...task, title, completed });
   };
 
   const handleDelete = () => {
@@ -74,9 +72,9 @@ const TaskEditDialog = ({ open, task, onClose, onSave, onDelete, error }: Props)
         <IconButton onClick={handleDelete} color="error">
           <DeleteIcon />
         </IconButton>
-        <Button onClick={onClose}>Отмена</Button>
+        <Button onClick={onClose}>Cancel</Button>
         <Button onClick={handleSave} variant="contained">
-          Сохранить
+          Save
         </Button>
       </DialogActions>
     </Dialog>

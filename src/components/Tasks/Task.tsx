@@ -5,9 +5,10 @@ import { TaskData } from '../../types';
 interface Props {
   task: TaskData;
   onEdit: () => void;
+  onToggleDone: () => void;
 }
 
-const Task = ({ task, onEdit }: Props) => {
+const Task = ({ task, onEdit, onToggleDone }: Props) => {
   const textStyle = {
     textDecoration: task.completed ? 'line-through' : 'none',
     color: task.completed ? 'gray' : 'inherit',
@@ -30,7 +31,12 @@ const Task = ({ task, onEdit }: Props) => {
           </IconButton>
         }
       >
-        <Checkbox edge="start" checked={task.completed} disabled />
+        <Checkbox
+          edge="start"
+          checked={task.completed}
+          onChange={onToggleDone}
+          disabled={task.completed}
+        />
         <ListItemText
           primary={
             <Stack direction="column" spacing={1}>
@@ -53,7 +59,7 @@ const Task = ({ task, onEdit }: Props) => {
           }
         />
       </ListItem>
-      <Divider sx={{opacity: 0.8}} />
+      <Divider sx={{ opacity: 0.8 }} />
     </>
   );
 };
