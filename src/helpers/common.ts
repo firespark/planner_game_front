@@ -1,0 +1,14 @@
+export const getPointsBackgroundColor = (points: number) => {
+    if (points <= 5) return '#f4e176c2';
+    if (points <= 10) return '#e4f476c2';
+    if (points <= 15) return '#cdf476c2';
+    if (points <= 30) return '#aaf775c2';
+    if (points <= 40) return '#75f789c2';
+    if (points <= 60) return '#75f7d2c2';
+    if (points <= 90) return '#75d9f7c2';
+    if (points <= 120) return '#759cf7c2';
+    if (points <= 180) return '#9875f7c2';
+    if (points <= 240) return '#fb747bc2';
+    if (points <= 300) return '#ae5529c2';
+    return '#ff4e4ec2';
+};

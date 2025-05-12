@@ -8,7 +8,7 @@ interface Props {
 }
 
 const Slot = ({ slot, project_id }: Props) => (
-  <Paper variant="outlined" sx={{ p: 2 }}>
+  <Paper variant="outlined" sx={{ p: 2, backgroundColor: '#bbb', }}>
     <Typography variant="subtitle2">{slot.date}</Typography>
     <TaskList tasks={slot.tasks} date={slot.date} project_id={project_id} />
   </Paper>

@@ -1,4 +1,4 @@
-import { List, Stack, IconButton } from '@mui/material';
+import { List, Stack, IconButton, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useState } from 'react';
 import { TaskData } from '../../types';
@@ -19,6 +19,10 @@ const TaskList = ({ tasks: initialTasks, date, project_id }: Props) => {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [error, setError] = useState('');
 
+  const today = new Date(new Date().toDateString());
+  const slotDate = new Date(date);
+  const isPast = slotDate < today;
+  const isToday = slotDate.getTime() === today.getTime();
 
   const handleEditClick = (task: TaskData) => {
     setSelectedTask(task);
@@ -139,53 +143,65 @@ const TaskList = ({ tasks: initialTasks, date, project_id }: Props) => {
   const doneTasks = tasks.filter((t) => t.completed);
 
   return (
-    <Stack spacing={2}>
-      <Stack direction="row" alignItems="center" justifyContent="flex-end">
-        <IconButton onClick={() => setCreateDialogOpen(true)} size="small">
-          <AddIcon />
-        </IconButton>
-      </Stack>
+    <Paper
+      elevation={3}
+      sx={{
+        backgroundColor: isPast ? '#f0f0f0' : isToday ? '#e7fbe7' : 'white',
+        opacity: isPast ? 0.5 : 1,
+        padding: 2,
+        borderRadius: 2,
+        border: isToday ? '2px solid green' : undefined
+      }}
+    >
+      <Stack spacing={2}>
+        {!isPast && (
+          <Stack direction="row" alignItems="center" justifyContent="flex-end">
+            <IconButton onClick={() => setCreateDialogOpen(true)} size="small">
+              <AddIcon />
+            </IconButton>
+          </Stack>
+        )}
 
-      <List dense>
-        {undoneTasks.map((task) => (
-          <Task
-            key={task.id}
-            task={task}
-            onEdit={() => handleEditClick(task)}
-            onToggleDone={() => handleToggleDone(task.id)}
-          />
-        ))}
-      </List>
-
-      {doneTasks.length > 0 && (
         <List dense>
-          {doneTasks.map((task) => (
+          {undoneTasks.map((task) => (
             <Task
               key={task.id}
               task={task}
-              onEdit={() => handleEditClick(task)}
-              onToggleDone={() => handleToggleDone(task.id)}
+              onEdit={!isPast ? () => handleEditClick(task) : undefined}
+              onToggleDone={!isPast ? () => handleToggleDone(task.id) : undefined}
             />
           ))}
         </List>
-      )}
 
-      <TaskEditDialog
-        open={dialogOpen}
-        task={selectedTask}
-        onClose={handleDialogClose}
-        onSave={handleSave}
-        onDelete={handleDelete}
-        error={error}
-      />
+        {doneTasks.length > 0 && (
+          <List dense>
+            {doneTasks.map((task) => (
+              <Task
+                key={task.id}
+                task={task}
+                onEdit={!isPast ? () => handleEditClick(task) : undefined}
+              />
+            ))}
+          </List>
+        )}
 
-      <TaskCreateDialog
-        open={createDialogOpen}
-        onClose={() => setCreateDialogOpen(false)}
-        onCreate={handleCreate}
-        error={error}
-      />
-    </Stack>
+        <TaskEditDialog
+          open={dialogOpen}
+          task={selectedTask}
+          onClose={handleDialogClose}
+          onSave={handleSave}
+          onDelete={handleDelete}
+          error={error}
+        />
+
+        <TaskCreateDialog
+          open={createDialogOpen}
+          onClose={() => setCreateDialogOpen(false)}
+          onCreate={handleCreate}
+          error={error}
+        />
+      </Stack>
+    </Paper>
   );
 };
 

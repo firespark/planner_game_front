@@ -22,7 +22,6 @@ const Segment = ({ segment, project_id, isActive, onActivate }: Props) => {
       sx={{
         p: 2,
         backgroundColor: colorMap[segment.type],
-        cursor: 'pointer',
         mb: 2,
       }}
     >
