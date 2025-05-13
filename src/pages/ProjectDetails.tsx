@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { SegmentData, ProjectData } from '../types';
 import {
   CircularProgress,
-  Container,
   Typography,
   LinearProgress
 } from '@mui/material';

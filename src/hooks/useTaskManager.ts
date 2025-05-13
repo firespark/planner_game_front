@@ -84,6 +84,7 @@ export const useTaskManager = (
             id: data.id,
             title,
             points,
+            start_points: points,
             completed: false,
             date,
           };

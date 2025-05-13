@@ -1,4 +1,5 @@
-import { Paper, Typography, Box } from '@mui/material';
+/*
+import { Paper, Typography, Box, Grid } from '@mui/material';
 import { SegmentData } from '../../types';
 import Slot from '../Slots/Slot';
 
@@ -33,26 +34,16 @@ const Segment = ({ segment, project_id, isActive, onActivate }: Props) => {
         Part {segment.id}
       </Typography>
 
+
       {isActive && (
-        <Box
-          mt={2}
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-          }}
-        >
-          {segment.slots.map((slot, index) => (
-            <Box
-              key={index}
-              sx={{
-                width: '25%',
-                boxSizing: 'border-box',
-                padding: '8px',
-              }}
-            >
-              <Slot slot={slot} project_id={project_id} />
-            </Box>
-          ))}
+        <Box mt={2}>
+          <Grid container spacing={2}>
+            {segment.slots.map((slot, index) => (
+              <Grid item size={{ xs: 12, sm: 6, md: 3 }} key={index}>
+                <Slot slot={slot} project_id={project_id} />
+              </Grid>
+            ))}
+          </Grid>
         </Box>
       )}
     </Paper>
@@ -60,3 +51,4 @@ const Segment = ({ segment, project_id, isActive, onActivate }: Props) => {
 };
 
 export default Segment;
+*/

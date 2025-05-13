@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Container } from '@mui/material';
 import Header from './components/Layout/Header';
@@ -7,6 +7,8 @@ import ProjectDetails from './pages/ProjectDetails';
 import ProjectsPage from './pages/ProjectsPage';
 import ProjectEditPage from './pages/ProjectEditPage';
 import NotFoundPage from './pages/NotFoundPage';
+import LoginPage from './pages/LoginPage';
+import { checkAuthCode } from './helpers/authHelpers';
 
 // создаём тему
 const theme = createTheme({
@@ -19,6 +21,8 @@ const theme = createTheme({
 });
 
 const App = () => {
+  const isAuthenticated = checkAuthCode();
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -26,10 +30,26 @@ const App = () => {
         <Header />
         <Container maxWidth={false} sx={{ maxWidth: 1400, mx: 'auto', py: 4 }}>
           <Routes>
-            <Route path="/" element={<ProjectsPage />} />
-            <Route path="/project/create" element={<ProjectCreatePage />} />
-            <Route path="/project/:id" element={<ProjectDetails />} />
-            <Route path="/project/edit/:id" element={<ProjectEditPage />} />
+            <Route
+              path="/"
+              element={isAuthenticated ? <ProjectsPage /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/project/create"
+              element={isAuthenticated ? <ProjectCreatePage /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/project/:id"
+              element={isAuthenticated ? <ProjectDetails /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/project/edit/:id"
+              element={isAuthenticated ? <ProjectEditPage /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/login"
+              element={!isAuthenticated ? <LoginPage /> : <Navigate to="/" />}
+            />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Container>

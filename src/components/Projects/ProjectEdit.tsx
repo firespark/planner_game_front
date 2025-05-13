@@ -27,6 +27,13 @@ const ProjectEdit = () => {
   };
 
   const handleSubmit = () => {
+    if (!values) return;
+
+    if (!values.title || !values.start_date) {
+      setError('All fields are required');
+      return;
+    }
+
     console.log('Submit:', values);
     navigate(`/project/${id}`);
   };
