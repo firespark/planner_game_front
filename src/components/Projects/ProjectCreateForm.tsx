@@ -1,24 +1,19 @@
-// components/ProjectForm.tsx
 import { TextField, Stack, Button, Alert } from '@mui/material';
 import { ProjectFormData } from '../../types';
 
-interface ProjectFormProps {
+interface Props {
   values: ProjectFormData;
   onChange: (field: keyof ProjectFormData, value: string | number) => void;
   onSubmit: () => void;
   error: string | null;
-  submitLabel: string;
-  onDelete?: () => void;
 }
 
-const ProjectForm = ({
+const ProjectCreateForm = ({
   values,
   onChange,
   onSubmit,
   error,
-  submitLabel,
-  onDelete,
-}: ProjectFormProps) => {
+}: Props) => {
   return (
     <Stack spacing={2}>
       {error && <Alert severity="error">{error}</Alert>}
@@ -53,15 +48,10 @@ const ProjectForm = ({
         onChange={(e) => onChange('minimum_percentage', Number(e.target.value))}
       />
       <Button variant="contained" onClick={onSubmit}>
-        {submitLabel}
+        Create
       </Button>
-      {onDelete && (
-        <Button color="error" onClick={onDelete}>
-          Delete
-        </Button>
-      )}
     </Stack>
   );
 };
 
-export default ProjectForm;
+export default ProjectCreateForm;

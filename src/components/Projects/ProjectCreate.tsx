@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ProjectForm from './ProjectForm';
+import ProjectCreateForm from './ProjectCreateForm';
 import { ProjectFormData } from '../../types';
 
 const ProjectCreate = () => {
@@ -48,12 +48,11 @@ const ProjectCreate = () => {
   };
 
   return (
-    <ProjectForm
+    <ProjectCreateForm
       values={values}
       onChange={handleChange}
       onSubmit={handleSubmit}
       error={error}
-      submitLabel="Create"
     />
   );
 };

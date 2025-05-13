@@ -10,7 +10,6 @@ import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/LoginPage';
 import { checkAuthCode } from './helpers/authHelpers';
 
-// создаём тему
 const theme = createTheme({
   palette: {
     primary: {
