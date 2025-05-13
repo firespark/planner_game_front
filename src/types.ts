@@ -23,6 +23,7 @@ export interface TaskData {
     id: number;
     title: string;
     completed: boolean;
+    start_points: number;
     points: number;
     date: string;
 }

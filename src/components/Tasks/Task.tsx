@@ -1,7 +1,8 @@
 import { ListItem, ListItemText, Checkbox, IconButton, Stack, Typography, Divider } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { TaskData } from '../../types';
-import {getPointsBackgroundColor} from '../../helpers/common';
+import { getPointsBackgroundColor } from '../../helpers/styleHelpers';
 
 interface Props {
   task: TaskData;
@@ -55,6 +56,7 @@ const Task = ({ task, onEdit, onToggleDone }: Props) => {
           primary={
             <Stack direction="column" spacing={1} sx={{ width: '100%' }}>
               <Typography>{task.title}</Typography>
+
               <Typography
                 color="text.secondary"
                 sx={{
@@ -63,10 +65,17 @@ const Task = ({ task, onEdit, onToggleDone }: Props) => {
                   borderRadius: '4px',
                   fontSize: '12px',
                   width: 'fit-content',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
                 }}
               >
                 {task.points} pts
+                {task.points < task.start_points && (
+                  <ArrowDownwardIcon fontSize="inherit" sx={{ color: 'red' }} />
+                )}
               </Typography>
+
             </Stack>
           }
         />

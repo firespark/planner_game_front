@@ -11,9 +11,9 @@ interface Props {
 
 const Segment = ({ segment, project_id, isActive, onActivate }: Props) => {
   const colorMap = {
-    past: '#e0e0e0',
-    current: '#1976d2',
-    future: '#b3e5fc',
+    past: '#cfd9e3',
+    current: '#19b8d2',
+    future: '#98d0b9',
   };
 
   return (
@@ -25,9 +25,14 @@ const Segment = ({ segment, project_id, isActive, onActivate }: Props) => {
         mb: 2,
       }}
     >
-      <Typography variant="h6" color={segment.type === 'past' ? 'textSecondary' : 'white'}>
-        Segment #{segment.id}
+      <Typography
+        variant="h6"
+        color="white"
+        sx={{ width: '100%', cursor: 'pointer' }}
+      >
+        Part {segment.id}
       </Typography>
+
 
       {isActive && (
         <Box mt={2}>

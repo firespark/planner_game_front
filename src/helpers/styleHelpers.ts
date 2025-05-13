@@ -12,3 +12,11 @@ export const getPointsBackgroundColor = (points: number) => {
     if (points <= 300) return '#ae5529c2';
     return '#ff4e4ec2';
 };
+
+export const getColorByPercentage = (percentage: number): string => {
+    if (percentage >= 100) return '#2e7d32';
+    if (percentage >= 80) return '#81c784';
+    if (percentage >= 50) return '#1976d2';
+    if (percentage >= 20) return '#fbc02d';
+    return '#d32f2f';
+  };

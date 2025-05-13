@@ -3,6 +3,7 @@ import {
   DialogTitle,
   DialogContent,
   TextField,
+  Typography,
   DialogActions,
   Button,
   Checkbox,
@@ -14,6 +15,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState, useEffect } from 'react';
 import { TaskData } from '../../types';
+import { getPointsBackgroundColor } from '../../helpers/styleHelpers';
 
 interface Props {
   open: boolean;
@@ -52,6 +54,43 @@ const TaskEditDialog = ({ open, task, onClose, onSave, onDelete, error }: Props)
       <DialogTitle>Edit task</DialogTitle>
       <DialogContent>
         {error && <Alert severity="error">{error}</Alert>}
+        {task && (
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              Points:
+            </Typography>
+
+            <Box display="flex" alignItems="center" gap={1}>
+              {task.points < task.start_points && (
+                <Typography
+                  variant="body1"
+                  color="text.disabled"
+                  sx={{ textDecoration: 'line-through' }}
+                >
+                  {task.start_points} pts
+                </Typography>
+              )}
+
+              <Typography
+                variant="body1"
+                color="text.secondary"
+                sx={{
+                  backgroundColor: getPointsBackgroundColor(task.points),
+                  padding: '4px 8px',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  width: 'fit-content',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                {task.points} pts
+              </Typography>
+            </Box>
+          </Box>
+        )}
+
         <TextField
           label="title"
           fullWidth
