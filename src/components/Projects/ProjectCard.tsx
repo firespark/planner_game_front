@@ -1,7 +1,17 @@
-import { Paper, Typography, LinearProgress, Button } from '@mui/material';
+import {
+  Paper,
+  Typography,
+  LinearProgress,
+  Button,
+  Box
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { ProjectData } from '../../types';
 import { getColorByPercentage } from '../../helpers/styleHelpers';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import '../../assets/style.css';
 
 const ProjectCard = ({
   id,
@@ -10,26 +20,44 @@ const ProjectCard = ({
   total_points,
   end_date,
   max_points,
-  minimum_percentage
+  minimum_percentage,
+  finished
 }: ProjectData) => {
   const navigate = useNavigate();
   const percentage = max_points > 0 ? Math.round((total_points / max_points) * 100) : 0;
   const barColor = getColorByPercentage(percentage);
 
+  const completedEnough = finished ? percentage >= 70 : percentage >= minimum_percentage;
+
+  const activeColor = '#19b8d2';
+
   return (
-    <Paper style={{ padding: 20 }}>
-      <Typography
-        variant="h4"
-        sx={{ cursor: 'pointer', textDecoration: 'underline' }}
-        onClick={() => navigate(`/project/${id}`)}
-      >
-        {title}
-      </Typography>
-      <Typography color="textSecondary">
-        {start_date} - {end_date}
+    <Paper className={`project-card ${finished ? 'finished' : ''} ${completedEnough ? 'completed-enough' : ''}`}>
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+        <Typography
+          variant="h4"
+          className="project-title"
+          onClick={() => navigate(`/project/${id}`)}
+        >
+          {title}
+        </Typography>
+
+        {finished ? (
+          completedEnough ? (
+            <CheckCircleIcon color="success" />
+          ) : (
+            <CancelIcon sx={{ fontSize: 20, color: 'gray' }} />
+          )
+        ) : (
+          <AddCircleIcon sx={{ fontSize: 20, color: activeColor }} />
+        )}
+      </Box>
+
+      <Typography className="project-dates">
+        {start_date} – {end_date}
       </Typography>
 
-      <div style={{ marginTop: 12 }}>
+      <Box mt={2}>
         <LinearProgress
           variant="determinate"
           value={percentage}
@@ -38,18 +66,18 @@ const ProjectCard = ({
             borderRadius: 5,
             backgroundColor: '#e0e0e0',
             '& .MuiLinearProgress-bar': {
-              backgroundColor: barColor,
-            },
+              backgroundColor: barColor
+            }
           }}
         />
-        <Typography variant="body2" style={{ marginTop: 4 }}>
+        <Typography className="progress-text" variant="body2" mt={1}>
           {total_points} / {max_points} points ({percentage}% / {minimum_percentage}%)
         </Typography>
-      </div>
+      </Box>
 
       <Button
+        className="edit-button"
         variant="outlined"
-        style={{ marginTop: 12 }}
         onClick={() => navigate(`/project/edit/${id}`)}
       >
         Edit
