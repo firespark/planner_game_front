@@ -5,9 +5,12 @@ import {
   DialogActions,
   TextField,
   Button,
-  Alert
+  Alert,
+  IconButton,
+  Box
 } from '@mui/material';
-import { useState } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import { useState, useEffect } from 'react';
 
 interface Props {
   open: boolean;
@@ -20,17 +23,44 @@ const TaskCreateDialog = ({ open, onClose, onCreate, error }: Props) => {
   const [title, setTitle] = useState('');
   const [points, setPoints] = useState(60);
 
+  useEffect(() => {
+    if (open) {
+      setTitle('');
+      setPoints(60);
+    }
+  }, [open]);
+
   const handleSubmit = () => {
     onCreate(title.trim(), points);
   };
 
-  const handleClose = () => {
-    onClose();
+  const handlePointsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPoints = parseInt(e.target.value, 10);
+    if (!isNaN(newPoints)) {
+      setPoints(newPoints);
+    } else {
+      setPoints(0);
+    }
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Create Task</DialogTitle>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          pl: 3,
+          pr: 1,
+          pt: 2,
+        }}
+      >
+        <DialogTitle sx={{ p: 0 }}>Create Task</DialogTitle>
+        <IconButton onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
+
       <DialogContent>
         {error && <Alert severity="error">{error}</Alert>}
         <TextField
@@ -48,12 +78,14 @@ const TaskCreateDialog = ({ open, onClose, onCreate, error }: Props) => {
           margin="normal"
           inputProps={{ min: 1 }}
           value={points}
-          onChange={(e) => setPoints(parseInt(e.target.value, 10))}
+          onChange={handlePointsChange}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSubmit} variant="contained">Create</Button>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleSubmit} variant="contained">
+          Create
+        </Button>
       </DialogActions>
     </Dialog>
   );

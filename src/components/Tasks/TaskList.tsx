@@ -36,7 +36,7 @@ const TaskList = ({ tasks, date, project_id, isPast, isToday }: Props) => {
       sx={{
         backgroundColor: isPast ? '#e0e0e0' : isToday ? '#e7fbe7' : 'white',
         opacity: isPast ? 0.5 : 1,
-        padding: 2,
+        padding: 1,
         marginTop: 1,
         borderRadius: 2,
         border: isToday ? '2px solid green' : undefined,

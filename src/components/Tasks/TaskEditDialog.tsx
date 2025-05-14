@@ -13,6 +13,7 @@ import {
   Box
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 import { useState, useEffect } from 'react';
 import { TaskData } from '../../types';
 import { getPointsBackgroundColor } from '../../helpers/styleHelpers';
@@ -51,7 +52,22 @@ const TaskEditDialog = ({ open, task, onClose, onSave, onDelete, error }: Props)
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Edit task</DialogTitle>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          pl: 3,
+          pr: 1,
+          pt: 2,
+        }}
+      >
+        <DialogTitle sx={{ p: 0 }}>Edit task</DialogTitle>
+        <IconButton onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
+
       <DialogContent>
         {error && <Alert severity="error">{error}</Alert>}
         {task && (
@@ -108,6 +124,7 @@ const TaskEditDialog = ({ open, task, onClose, onSave, onDelete, error }: Props)
           label="Done"
         />
       </DialogContent>
+
       <DialogActions sx={{ justifyContent: 'space-between' }}>
         <IconButton onClick={handleDelete} color="error">
           <DeleteIcon />

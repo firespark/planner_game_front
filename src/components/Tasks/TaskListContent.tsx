@@ -15,7 +15,7 @@ const TaskListContent = ({ tasks, isPast, onEdit, onToggleDone }: Props) => {
 
   return (
     <>
-      <List dense>
+      <List dense sx={{ paddingTop: 0, paddingBottom: 0, marginBottom: 0 }}>
         {undone.map((task) => (
           <Task
             key={task.id}
@@ -26,7 +26,7 @@ const TaskListContent = ({ tasks, isPast, onEdit, onToggleDone }: Props) => {
         ))}
       </List>
       {done.length > 0 && (
-        <List dense>
+        <List dense sx={{ paddingTop: 0, paddingBottom: 0, marginTop: '10px' }}>
           {done.map((task) => (
             <Task
               key={task.id}
@@ -36,6 +36,7 @@ const TaskListContent = ({ tasks, isPast, onEdit, onToggleDone }: Props) => {
           ))}
         </List>
       )}
+
     </>
   );
 };

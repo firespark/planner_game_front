@@ -1,4 +1,12 @@
-import { ListItem, ListItemText, Checkbox, IconButton, Stack, Typography, Divider } from '@mui/material';
+import {
+  ListItem,
+  ListItemText,
+  Checkbox,
+  IconButton,
+  Stack,
+  Typography,
+  Divider,
+} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { TaskData } from '../../types';
@@ -11,15 +19,19 @@ interface Props {
 }
 
 const Task = ({ task, onEdit, onToggleDone }: Props) => {
-
   return (
     <>
       <ListItem
         disableGutters
         sx={{
+          py: 0.5,
+          px: 2,
           position: 'relative',
-          backgroundColor: task.completed ? '#f9f9f9' : 'transparent',
-          overflow: 'hidden',
+          backgroundColor: task.completed ? '#d2ebf0' : 'transparent',
+          borderRadius: '5px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           '&::after': task.completed
             ? {
               content: '""',
@@ -35,33 +47,50 @@ const Task = ({ task, onEdit, onToggleDone }: Props) => {
         }}
         secondaryAction={
           onEdit ? (
-            <IconButton edge="end" onClick={onEdit}>
-              <EditIcon />
+            <IconButton
+              edge="end"
+              onClick={onEdit}
+              sx={{
+                width: 28,
+                height: 28,
+                borderRadius: '50%',
+                padding: 1,
+                position: 'absolute',
+                right: 10,
+                top: '50%',
+                transform: 'translateY(-50%)',
+              }}
+            >
+              <EditIcon fontSize="small" />
             </IconButton>
           ) : null
         }
       >
-        {onToggleDone !== undefined ? (
-          <Checkbox
-            edge="start"
-            checked={task.completed}
-            onChange={onToggleDone}
-            disabled={task.completed}
-          />
-        ) : (
-          <Checkbox edge="start" checked={task.completed} disabled />
-        )}
+        <Checkbox
+          edge="start"
+          checked={task.completed}
+          onChange={onToggleDone}
+          disabled={task.completed || onToggleDone === undefined}
+          size="small"
+          sx={{
+            p: 0,
+            mr: 1,
+          }}
+        />
 
         <ListItemText
           primary={
-            <Stack direction="column" spacing={1} sx={{ width: '100%' }}>
-              <Typography>{task.title}</Typography>
+            <Stack direction="column" spacing={0.5} sx={{ width: '100%' }}>
+              <Typography fontSize="14px" lineHeight={1.2}>
+                {task.title}
+              </Typography>
 
               <Typography
                 color="text.secondary"
                 sx={{
                   backgroundColor: getPointsBackgroundColor(task.points),
-                  padding: '4px 8px',
+                  px: 1,
+                  py: 0.25,
                   borderRadius: '4px',
                   fontSize: '12px',
                   width: 'fit-content',
@@ -75,12 +104,12 @@ const Task = ({ task, onEdit, onToggleDone }: Props) => {
                   <ArrowDownwardIcon fontSize="inherit" sx={{ color: 'red' }} />
                 )}
               </Typography>
-
             </Stack>
           }
         />
       </ListItem>
-      <Divider sx={{ opacity: 0.8 }} />
+
+      <Divider sx={{ opacity: 0.3, my: 0.25 }} />
     </>
   );
 };
