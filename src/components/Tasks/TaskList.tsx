@@ -3,8 +3,12 @@ import TaskListContent from './TaskListContent';
 import TaskCreateButton from './TaskCreateButton';
 import TaskEditDialog from './TaskEditDialog';
 import TaskCreateDialog from './TaskCreateDialog';
-import { useTaskManager } from '../../hooks/useTaskManager';
 import { TaskData } from '../../types';
+import { useTasksState } from '../../hooks/useTasksState';
+import { useTaskUpdate } from '../../hooks/useTaskUpdate';
+import { useTaskDelete } from '../../hooks/useTaskDelete';
+import { useTaskCreate } from '../../hooks/useTaskCreate';
+import { useTaskDone } from '../../hooks/useTaskDone';
 
 interface Props {
   tasks: TaskData[];
@@ -17,18 +21,25 @@ interface Props {
 const TaskList = ({ tasks, date, project_id, isPast, isToday }: Props) => {
   const {
     tasks: currentTasks,
-    error,
+    setTasks,
     selectedTask,
     dialogOpen,
     createDialogOpen,
     setCreateDialogOpen,
-    handleEditClick,
-    handleDialogClose,
-    handleSave,
-    handleDelete,
-    handleCreate,
-    handleToggleDone,
-  } = useTaskManager(tasks, date, project_id);
+    error,
+    setError,
+    openEditDialog,
+    closeEditDialog,
+  } = useTasksState(tasks);
+
+  const { updateTask } = useTaskUpdate({
+    setTasks,
+    closeEditDialog,
+    setError,
+  });
+  const { deleteTask } = useTaskDelete({setTasks, closeEditDialog, setError});
+  const { createTask } = useTaskCreate({date, project_id, setTasks, setCreateDialogOpen, setError});
+  const { markAsDone } = useTaskDone({setTasks, setError});
 
   return (
     <Paper
@@ -47,26 +58,27 @@ const TaskList = ({ tasks, date, project_id, isPast, isToday }: Props) => {
         <TaskListContent
           tasks={currentTasks}
           isPast={isPast}
-          onEdit={handleEditClick}
-          onToggleDone={handleToggleDone}
+          onEdit={openEditDialog}
+          onToggleDone={markAsDone}
         />
         <TaskEditDialog
           open={dialogOpen}
           task={selectedTask}
-          onClose={handleDialogClose}
-          onSave={handleSave}
-          onDelete={handleDelete}
+          onClose={closeEditDialog}
+          onSave={updateTask}
+          onDelete={deleteTask}
           error={error}
         />
         <TaskCreateDialog
           open={createDialogOpen}
           onClose={() => setCreateDialogOpen(false)}
-          onCreate={handleCreate}
+          onCreate={createTask}
           error={error}
         />
       </Stack>
     </Paper>
   );
 };
+
 
 export default TaskList;

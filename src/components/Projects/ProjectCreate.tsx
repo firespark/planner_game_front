@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProjectCreateForm from './ProjectCreateForm';
 import { ProjectFormData } from '../../types';
+import { fetchCreateProject } from '../../api/apiProjects';
 
 const ProjectCreate = () => {
   const navigate = useNavigate();
@@ -30,20 +31,10 @@ const ProjectCreate = () => {
   const handleSubmit = async () => {
     setError(null);
     try {
-      const res = await fetch('/api/projects/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      });
-
-      const data = await res.json();
-      if (data.success && data.project_id) {
-        navigate(`/project/${data.project_id}`);
-      } else {
-        setError('Failed to create the project.');
-      }
+      const projectId = await fetchCreateProject(values);
+      navigate(`/project/${projectId}`);
     } catch {
-      setError('Failed to connect to the server.');
+      setError('Failed to create the project.');
     }
   };
 

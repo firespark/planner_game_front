@@ -9,6 +9,7 @@ import ProjectEditPage from './pages/ProjectEditPage';
 import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/LoginPage';
 import { checkAuthCode } from './helpers/authHelpers';
+import { ProjectProvider } from './context/ProjectContext';
 
 const theme = createTheme({
   palette: {
@@ -23,37 +24,39 @@ const App = () => {
   const isAuthenticated = checkAuthCode();
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Header />
-        <Container maxWidth={false} sx={{ maxWidth: 1400, mx: 'auto', py: 4 }}>
-          <Routes>
-            <Route
-              path="/"
-              element={isAuthenticated ? <ProjectsPage /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/project/create"
-              element={isAuthenticated ? <ProjectCreatePage /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/project/:id"
-              element={isAuthenticated ? <ProjectDetails /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/project/edit/:id"
-              element={isAuthenticated ? <ProjectEditPage /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/login"
-              element={!isAuthenticated ? <LoginPage /> : <Navigate to="/" />}
-            />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </Container>
-      </Router>
-    </ThemeProvider>
+    <ProjectProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <Header />
+          <Container maxWidth={false} sx={{ maxWidth: 1400, mx: 'auto', py: 4 }}>
+            <Routes>
+              <Route
+                path="/"
+                element={isAuthenticated ? <ProjectsPage /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/project/create"
+                element={isAuthenticated ? <ProjectCreatePage /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/project/:id"
+                element={isAuthenticated ? <ProjectDetails /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/project/edit/:id"
+                element={isAuthenticated ? <ProjectEditPage /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/login"
+                element={!isAuthenticated ? <LoginPage /> : <Navigate to="/" />}
+              />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Container>
+        </Router>
+      </ThemeProvider>
+    </ProjectProvider>
   );
 };
 

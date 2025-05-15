@@ -20,3 +20,11 @@ export const getColorByPercentage = (percentage: number): string => {
   if (percentage >= 20) return '#fbc02d';
   return '#d32f2f';
 };
+
+export const getBarColor = (percent: number): string => {
+  if (percent < 20) return '#f44336';
+  if (percent < 50) return '#ff9800';
+  if (percent < 80) return '#2196f3';
+  if (percent < 100) return '#a5d6a7';
+  return '#2e7d32';
+};

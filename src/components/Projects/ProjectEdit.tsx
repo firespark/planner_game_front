@@ -1,7 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ProjectEditForm from './ProjectEditForm';
 import { ProjectFormData } from '../../types';
+import {
+  fetchProject,
+  fetchUpdateProject,
+  fetchDeleteProject
+} from '../../api/apiProjects';
 
 const ProjectEdit = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,29 +15,20 @@ const ProjectEdit = () => {
   const [values, setValues] = useState<ProjectFormData | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchedRef = useRef(false);
+
   useEffect(() => {
-    const fetchProject = async () => {
-      try {
-        const res = await fetch(`/api/projects/${id}`);
-        const data = await res.json();
+    if (fetchedRef.current || !id) return;
+    fetchedRef.current = true;
 
-        if (data.success && data.project) {
-          setValues(data.project);
-        } else {
-          setError('Failed to load project.');
-        }
-      } catch {
-        setError('Failed to connect to the server.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProject();
+    fetchProject(id)
+      .then(setValues)
+      .catch(() => setError('Failed to load project.'))
+      .finally(() => setLoading(false));
   }, [id]);
 
   const handleSubmit = async () => {
-    if (!values) return;
+    if (!values || !id) return;
 
     if (!values.title) {
       setError('Title is required');
@@ -40,47 +36,27 @@ const ProjectEdit = () => {
     }
 
     try {
-      const res = await fetch(`/api/projects/update/${id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: values.title }),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        navigate(`/`);
-      } else {
-        setError('Failed to update the project.');
-      }
+      await fetchUpdateProject(id, values.title);
+      navigate('/');
     } catch {
-      setError('Failed to connect to the server.');
+      setError('Failed to update the project.');
     }
   };
 
   const handleDelete = async () => {
+    if (!id) return;
     const confirmed = confirm('Are you sure you want to delete this project and all its tasks?');
     if (!confirmed) return;
 
     try {
-      const res = await fetch(`/api/projects/delete/${id}`, {
-        method: 'DELETE',
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        navigate('/');
-      } else {
-        setError('Failed to delete the project.');
-      }
+      await fetchDeleteProject(id);
+      navigate('/');
     } catch {
-      setError('Failed to connect to the server.');
+      setError('Failed to delete the project.');
     }
   };
 
-  if (loading) return null;
-  if (!values) return null;
+  if (loading || !values) return null;
 
   return (
     <ProjectEditForm

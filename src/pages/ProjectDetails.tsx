@@ -1,15 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { SegmentData, ProjectData } from '../types';
+import { getBarColor } from '../helpers/styleHelpers';
+import { useProjectContext } from '../context/ProjectContext';
+import { fetchProjectDetails } from '../api/apiProjects';
+
 import {
   CircularProgress,
   Typography,
   LinearProgress
 } from '@mui/material';
+
 import Title from '../components/Layout/Title';
 import SegmentList from '../components/Segments/SegmentList';
 
 const ProjectDetails = () => {
+  const { maxPoints, setMaxPoints, setTotalPoints, totalPoints } = useProjectContext();
+
   const { id } = useParams();
   const projectId = id ? parseInt(id, 10) : null;
 
@@ -18,19 +25,19 @@ const ProjectDetails = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchedRef = useRef(false);
+
   useEffect(() => {
-    if (!projectId) return;
+    if (fetchedRef.current || !projectId) return;
+    fetchedRef.current = true;
 
-    const fetchData = async () => {
+    const loadData = async () => {
       try {
-        const response = await fetch(`/api/projects/${projectId}/dates`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch project data');
-        }
-
-        const data = await response.json();
+        const data = await fetchProjectDetails(projectId);
         setProject(data.project);
         setSegments(data.segments);
+        setMaxPoints(data.project.max_points);
+        setTotalPoints(data.project.total_points);
       } catch (err) {
         setError('Failed to load data');
       } finally {
@@ -38,7 +45,7 @@ const ProjectDetails = () => {
       }
     };
 
-    fetchData();
+    loadData();
   }, [projectId]);
 
   if (loading) {
@@ -49,17 +56,8 @@ const ProjectDetails = () => {
     return <p>{error || 'Project not found'}</p>;
   }
 
-  const { total_points, max_points, minimum_percentage } = project;
-  const percentage = max_points === 0 ? 0 : Math.round((total_points / max_points) * 100);
-
-  const getBarColor = (percent: number): string => {
-    if (percent < 20) return '#f44336';       // red
-    if (percent < 50) return '#ff9800';       // orange/yellow
-    if (percent < 80) return '#2196f3';       // blue
-    if (percent < 100) return '#a5d6a7';      // light green
-    return '#2e7d32';                         // dark green
-  };
-
+  const { minimum_percentage } = project;
+  const percentage = maxPoints === 0 ? 0 : Math.round((totalPoints / maxPoints) * 100);
   const barColor = getBarColor(percentage);
 
   return (
@@ -80,7 +78,7 @@ const ProjectDetails = () => {
           }}
         />
         <Typography variant="body2" style={{ marginTop: 4 }}>
-          {total_points} / {max_points} points ({percentage}% / {minimum_percentage}%)
+          {totalPoints} / {maxPoints} points ({percentage}% / {minimum_percentage}%)
         </Typography>
       </div>
 
