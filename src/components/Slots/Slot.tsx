@@ -1,5 +1,6 @@
 import { Paper, Typography } from '@mui/material';
 import { SlotData } from '../../types';
+import { parseLocalDate } from '../../helpers/dateHelpers';
 import TaskList from '../Tasks/TaskList';
 
 interface Props {
@@ -8,8 +9,11 @@ interface Props {
 }
 
 const Slot = ({ slot, project_id }: Props) => {
-  const today = new Date(new Date().toDateString());
-  const slotDate = new Date(slot.date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const slotDate = parseLocalDate(slot.date);
+
   const isPast = slotDate < today;
   const isToday = slotDate.getTime() === today.getTime();
 
@@ -20,7 +24,9 @@ const Slot = ({ slot, project_id }: Props) => {
         p: 2,
         backgroundColor: isPast ? '#e0e0e0' : '#f3f3f3',
         opacity: isPast ? 0.5 : 1,
-        border: isToday ? '2px solid green' : undefined,
+        boxShadow: isToday
+          ? '0 0 8px 2px rgba(0, 128, 0, 0.7)'
+          : undefined,
       }}
     >
       <Typography

@@ -50,7 +50,9 @@ const TaskList = ({ tasks, date, project_id, isPast, isToday }: Props) => {
         padding: 1,
         marginTop: 1,
         borderRadius: 2,
-        border: isToday ? '2px solid green' : undefined,
+        boxShadow: isToday
+          ? '0 0 8px 2px rgba(0, 128, 0, 0.7)'
+          : undefined,
       }}
     >
       <Stack spacing={2}>
