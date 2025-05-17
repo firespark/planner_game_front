@@ -2,14 +2,17 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stack, Alert, TextField, Button, Box } from '@mui/material';
 import { trySetAuthCode } from '../../helpers/authHelpers';
+import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { setAuthenticated } = useAuth();
 
   const onSubmit = () => {
     if (trySetAuthCode(code)) {
+      setAuthenticated(true);
       navigate('/');
     } else {
       setError('Invalid code');
