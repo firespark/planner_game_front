@@ -33,14 +33,18 @@ export function useTaskCreate({
           date,
         };
 
-        setTasks((prev) => prev.concat(newTask));
+        setTasks(prev => prev.concat(newTask));
         setCreateDialogOpen(false);
         setMaxPoints(maxPoints + points);
       } else {
         setError(data.error || 'Failed to create task');
       }
-    } catch {
-      setError('Request failed');
+    } catch (error) {
+      if (error instanceof Error && error.message) {
+        setError(error.message);
+      } else {
+        setError('Request failed');
+      }
     }
   }
 

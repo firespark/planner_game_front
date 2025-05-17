@@ -35,8 +35,12 @@ const ProjectDetails = () => {
         setSegments(data.segments);
         setMaxPoints(data.project.max_points);
         setTotalPoints(data.project.total_points);
-      } catch (err) {
-        setError('Failed to load data');
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('Failed to load data');
+        }
       } finally {
         setLoading(false);
       }

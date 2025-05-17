@@ -30,11 +30,21 @@ const ProjectCreate = () => {
 
   const handleSubmit = async () => {
     setError(null);
+
+    if (!values.title) {
+      setError('Title is required');
+      return;
+    }
+
     try {
       const projectId = await fetchCreateProject(values);
       navigate(`/project/${projectId}`);
-    } catch {
-      setError('Failed to create the project.');
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message) {
+        setError(error.message);
+      } else {
+        setError('Failed to create the project');
+      }
     }
   };
 

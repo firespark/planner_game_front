@@ -49,3 +49,19 @@
 .project-card .edit-button {
   margin-top: 16px;
 }
+
+.project-progress-container {
+  margin-top: 12px;
+}
+
+.project-progress-bar {
+  height: 10px;
+  border-radius: 5px;
+  background-color: #e0e0e0;
+}
+
+.project-progress-text {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #444;
+}

@@ -1,0 +1,26 @@
+.segment-paper {
+  padding: 16px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  border: none;
+}
+
+.segment-title {
+  width: 100%;
+  cursor: pointer;
+  color: white;
+  font-weight: 500;
+  font-size: 1.25rem;
+}
+
+.slots-container {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.slot-wrapper {
+  width: 25%;
+  box-sizing: border-box;
+  padding: 8px;
+}

@@ -28,3 +28,16 @@ export const getBarColor = (percent: number): string => {
   if (percent < 100) return '#a5d6a7';
   return '#2e7d32';
 };
+
+export function getTodayBoxShadowClass(isToday: boolean): string {
+  return isToday ? 'task-list-glow' : '';
+}
+
+export function getSegmentColor(type: string): string {
+  const colorMap: Record<string, string> = {
+    past: '#cfd9e3',
+    current: '#19b8d2',
+    future: '#98d0b9',
+  };
+  return colorMap[type] ?? '#ffffff';
+}

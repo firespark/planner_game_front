@@ -2,6 +2,9 @@ import { Paper, Typography } from '@mui/material';
 import { SlotData } from '../../types';
 import { parseLocalDate } from '../../helpers/dateHelpers';
 import TaskList from '../Tasks/TaskList';
+import { getTodayBoxShadowClass } from '../../helpers/styleHelpers';
+
+import '../../assets/slotsStyle.css';
 
 interface Props {
   slot: SlotData;
@@ -17,28 +20,17 @@ const Slot = ({ slot, project_id }: Props) => {
   const isPast = slotDate < today;
   const isToday = slotDate.getTime() === today.getTime();
 
+  const paperClassName = [
+    'slot-paper',
+    isPast ? 'past' : '',
+    getTodayBoxShadowClass(isToday),
+  ].filter(Boolean).join(' ');
+
   return (
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 2,
-        backgroundColor: isPast ? '#e0e0e0' : '#f3f3f3',
-        opacity: isPast ? 0.5 : 1,
-        boxShadow: isToday
-          ? '0 0 8px 2px rgba(0, 128, 0, 0.7)'
-          : undefined,
-      }}
-    >
-      <Typography
-        sx={{
-          fontSize: '1rem',
-          color: '#8c8282',
-          fontWeight: 600,
-        }}
-      >
+    <Paper variant="outlined" className={paperClassName}>
+      <Typography className="slot-date">
         {slot.date}
       </Typography>
-
 
       <TaskList
         tasks={slot.tasks}

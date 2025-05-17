@@ -1,0 +1,144 @@
+.task-list-paper {
+  background-color: white;
+  opacity: 1;
+  padding: 8px;
+  margin-top: 8px;
+  border-radius: 16px;
+  box-sizing: border-box;
+  transition: box-shadow 0.3s ease;
+}
+
+.task-list-paper.past {
+  background-color: #e0e0e0;
+  opacity: 0.5;
+}
+
+.task-list-paper.today {
+  background-color: #e7fbe7;
+}
+
+.task-list-glow {
+  box-shadow: 0 0 8px 2px rgba(0, 128, 0, 0.7) !important;
+}
+
+.task-list-item {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  position: relative;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.task-list-item.completed {
+  background-color: #d2ebf0;
+}
+
+.task-list-item.completed::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: gray;
+  transform: translateY(-50%);
+}
+
+.task-list-edit-button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  padding: 0;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: static;
+  transform: none;
+}
+
+
+.task-checkbox {
+  padding: 0;
+  margin-right: 8px;
+}
+
+.task-title-stack {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.task-title-text {
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+}
+
+.task-points {
+  background-color: var(--points-bg-color, transparent);
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  border-radius: 4px;
+  font-size: 12px !important;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.task-points-arrow-down {
+  color: red;
+}
+
+.task-divider {
+  opacity: 0.3;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.task-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 24px;
+  padding-right: 8px;
+  padding-top: 16px;
+}
+
+.task-dialog-title {
+  padding: 0 !important;
+}
+
+.task-points-container {
+  margin-bottom: 16px;
+}
+
+.task-points-line-through {
+  text-decoration: line-through;
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.task-points-value {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dialog-actions-space-between {
+  justify-content: space-between;
+}
+
+.dialog-actions-buttons-margin-left {
+  margin-left: 8px;
+}

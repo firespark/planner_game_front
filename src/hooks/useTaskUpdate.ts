@@ -49,7 +49,13 @@ export function useTaskUpdate({ setTasks, closeEditDialog, setError }: UseTaskUp
           setError(data.error || 'Failed to update task');
         }
       })
-      .catch(() => setError('Request failed'));
+      .catch((error) => {
+        if (error instanceof Error && error.message) {
+          setError(error.message);
+        } else {
+          setError('Request failed');
+        }
+      });
   }
 
   return { updateTask };

@@ -11,7 +11,7 @@ import { getColorByPercentage } from '../../helpers/styleHelpers';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import '../../assets/style.css';
+import '../../assets/projectsStyle.css';
 
 const ProjectCard = ({
   id,

@@ -1,13 +1,16 @@
 import { ProjectFormData, ProjectData, SegmentData } from '../types';
+import { handleError } from '../helpers/errorHelpers';
+
 
 export async function fetchProjects(): Promise<ProjectData[]> {
   const response = await fetch('/api/projects');
+  const data = await response.json();
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch projects');
+  if (!response.ok || !Array.isArray(data)) {
+    handleError(response, data, 'Failed to fetch projects');
   }
 
-  return response.json();
+  return data;
 }
 
 export async function fetchProjectDetails(projectId: number): Promise<{
@@ -15,12 +18,11 @@ export async function fetchProjectDetails(projectId: number): Promise<{
   segments: SegmentData[];
 }> {
   const response = await fetch(`/api/projects/${projectId}/dates`);
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch project data');
-  }
-
   const data = await response.json();
+
+  if (!response.ok || !data?.project || !Array.isArray(data?.segments)) {
+    handleError(response, data, 'Failed to fetch project data');
+  }
 
   return {
     project: data.project,
@@ -29,71 +31,54 @@ export async function fetchProjectDetails(projectId: number): Promise<{
 }
 
 export async function fetchProject(id: string): Promise<ProjectFormData> {
-  const res = await fetch(`/api/projects/${id}`);
+  const response = await fetch(`/api/projects/${id}`);
+  const data = await response.json();
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch project');
+  if (!response.ok || !data.success || !data.project) {
+    handleError(response, data, 'Failed to load project');
   }
 
-  const data = await res.json();
-
-  if (data.success && data.project) {
-    return data.project;
-  }
-
-  throw new Error('Failed to load project');
+  return data.project;
 }
 
 export async function fetchUpdateProject(id: string, title: string): Promise<void> {
-  const res = await fetch(`/api/projects/update/${id}`, {
+  const response = await fetch(`/api/projects/update/${id}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ title }),
   });
 
-  if (!res.ok) {
-    throw new Error('Failed to update project');
-  }
+  const data = await response.json();
 
-  const data = await res.json();
-
-  if (!data.success) {
-    throw new Error('Failed to update the project');
+  if (!response.ok || !data.success) {
+    handleError(response, data, 'Failed to update the project');
   }
 }
 
 export async function fetchDeleteProject(id: string): Promise<void> {
-  const res = await fetch(`/api/projects/delete/${id}`, {
+  const response = await fetch(`/api/projects/delete/${id}`, {
     method: 'DELETE',
   });
 
-  if (!res.ok) {
-    throw new Error('Failed to delete project');
-  }
+  const data = await response.json();
 
-  const data = await res.json();
-
-  if (!data.success) {
-    throw new Error('Failed to delete the project');
+  if (!response.ok || !data.success) {
+    handleError(response, data, 'Failed to delete the project');
   }
 }
 
 export async function fetchCreateProject(data: ProjectFormData): Promise<number> {
-  const res = await fetch('/api/projects/create', {
+  const response = await fetch('/api/projects/create', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
 
-  if (!res.ok) {
-    throw new Error('Failed to create project');
+  const result = await response.json();
+
+  if (!response.ok || !result.success || !result.project_id) {
+    handleError(response, result, 'Failed to create the project');
   }
 
-  const result = await res.json();
-
-  if (result.success && result.project_id) {
-    return result.project_id;
-  }
-
-  throw new Error('Failed to create the project');
+  return result.project_id;
 }

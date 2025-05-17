@@ -40,8 +40,12 @@ export function useTaskDelete({ setTasks, closeEditDialog, setError }: UseTaskDe
       } else {
         setError(data.error || 'Failed to delete task');
       }
-    } catch {
-      setError('Request failed');
+    } catch (error) {
+      if (error instanceof Error && error.message) {
+        setError(error.message);
+      } else {
+        setError('Request failed');
+      }
     }
   }
 

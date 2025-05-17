@@ -12,6 +12,8 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { TaskData } from '../../types';
 import { getPointsBackgroundColor } from '../../helpers/styleHelpers';
 
+import '../../assets/tasksStyle.css';
+
 interface Props {
   task: TaskData;
   onEdit?: () => void;
@@ -19,52 +21,16 @@ interface Props {
 }
 
 const Task = ({ task, onEdit, onToggleDone }: Props) => {
+  const pointsBgColor = getPointsBackgroundColor(task.points);
+
+  const listItemClasses = ['task-list-item'];
+  if (task.completed) listItemClasses.push('completed');
+
   return (
     <>
       <ListItem
         disableGutters
-        sx={{
-          py: 0.5,
-          px: 2,
-          position: 'relative',
-          backgroundColor: task.completed ? '#d2ebf0' : 'transparent',
-          borderRadius: '5px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          '&::after': task.completed
-            ? {
-              content: '""',
-              position: 'absolute',
-              top: '50%',
-              left: 0,
-              right: 0,
-              height: '2px',
-              backgroundColor: 'gray',
-              transform: 'translateY(-50%)',
-            }
-            : {},
-        }}
-        secondaryAction={
-          onEdit ? (
-            <IconButton
-              edge="end"
-              onClick={onEdit}
-              sx={{
-                width: 28,
-                height: 28,
-                borderRadius: '50%',
-                padding: 1,
-                position: 'absolute',
-                right: 10,
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
-            >
-              <EditIcon fontSize="small" />
-            </IconButton>
-          ) : null
-        }
+        className={listItemClasses.join(' ')}
       >
         <Checkbox
           edge="start"
@@ -72,44 +38,42 @@ const Task = ({ task, onEdit, onToggleDone }: Props) => {
           onChange={onToggleDone}
           disabled={task.completed || onToggleDone === undefined}
           size="small"
-          sx={{
-            p: 0,
-            mr: 1,
-          }}
+          className="task-checkbox"
         />
 
         <ListItemText
           primary={
-            <Stack direction="column" spacing={0.5} sx={{ width: '100%' }}>
-              <Typography fontSize="14px" lineHeight={1.2}>
+            <Stack className="task-title-stack">
+              <Typography className="task-title-text">
                 {task.title}
               </Typography>
 
               <Typography
                 color="text.secondary"
-                sx={{
-                  backgroundColor: getPointsBackgroundColor(task.points),
-                  px: 1,
-                  py: 0.25,
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                  width: 'fit-content',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                }}
+                className="task-points"
+                style={{ '--points-bg-color': pointsBgColor } as React.CSSProperties}
               >
                 {task.points} pts
                 {task.points < task.start_points && (
-                  <ArrowDownwardIcon fontSize="inherit" sx={{ color: 'red' }} />
+                  <ArrowDownwardIcon fontSize="inherit" className="task-points-arrow-down" />
                 )}
               </Typography>
             </Stack>
           }
         />
+
+        {onEdit && (
+          <IconButton
+            edge="end"
+            onClick={onEdit}
+            className="task-list-edit-button"
+          >
+            <EditIcon fontSize="small" />
+          </IconButton>
+        )}
       </ListItem>
 
-      <Divider sx={{ opacity: 0.3, my: 0.25 }} />
+      <Divider className="task-divider" />
     </>
   );
 };

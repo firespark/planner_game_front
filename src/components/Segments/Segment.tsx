@@ -1,6 +1,9 @@
 import { Paper, Typography, Box } from '@mui/material';
 import { SegmentData } from '../../types';
 import Slot from '../Slots/Slot';
+import { getSegmentColor } from '../../helpers/styleHelpers';
+
+import '../../assets/segmentsStyle.css';
 
 interface Props {
   segment: SegmentData;
@@ -10,46 +13,24 @@ interface Props {
 }
 
 const Segment = ({ segment, project_id, isActive, onActivate }: Props) => {
-  const colorMap = {
-    past: '#cfd9e3',
-    current: '#19b8d2',
-    future: '#98d0b9',
-  };
+  const backgroundColor = getSegmentColor(segment.type);
 
   return (
     <Paper
       onClick={onActivate}
-      sx={{
-        p: 2,
-        backgroundColor: colorMap[segment.type],
-        mb: 2,
-      }}
+      className="segment-paper"
+      style={{ backgroundColor }}
+      elevation={1}
+      sx={{ border: 'none' }}
     >
-      <Typography
-        variant="h6"
-        color="white"
-        sx={{ width: '100%', cursor: 'pointer' }}
-      >
+      <Typography variant="h6" className="segment-title">
         Part {segment.id}
       </Typography>
 
       {isActive && (
-        <Box
-          mt={2}
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-          }}
-        >
+        <Box className="slots-container">
           {segment.slots.map((slot, index) => (
-            <Box
-              key={index}
-              sx={{
-                width: '25%',
-                boxSizing: 'border-box',
-                padding: '8px',
-              }}
-            >
+            <Box key={index} className="slot-wrapper">
               <Slot slot={slot} project_id={project_id} />
             </Box>
           ))}

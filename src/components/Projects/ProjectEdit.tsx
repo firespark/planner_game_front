@@ -23,7 +23,13 @@ const ProjectEdit = () => {
 
     fetchProject(id)
       .then(setValues)
-      .catch(() => setError('Failed to load project.'))
+      .catch((error) => {
+        if (error instanceof Error && error.message) {
+          setError(error.message);
+        } else {
+          setError('Failed to load project');
+        }
+      })
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -38,8 +44,12 @@ const ProjectEdit = () => {
     try {
       await fetchUpdateProject(id, values.title);
       navigate('/');
-    } catch {
-      setError('Failed to update the project.');
+    } catch (error) {
+      if (error instanceof Error && error.message) {
+        setError(error.message);
+      } else {
+        setError('Failed to update the project');
+      }
     }
   };
 
@@ -51,8 +61,12 @@ const ProjectEdit = () => {
     try {
       await fetchDeleteProject(id);
       navigate('/');
-    } catch {
-      setError('Failed to delete the project.');
+    } catch (error) {
+      if (error instanceof Error && error.message) {
+        setError(error.message);
+      } else {
+        setError('Failed to delete the project');
+      }
     }
   };
 

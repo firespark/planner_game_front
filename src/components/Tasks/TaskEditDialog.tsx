@@ -10,13 +10,15 @@ import {
   FormControlLabel,
   IconButton,
   Alert,
-  Box
+  Box,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import { useState, useEffect } from 'react';
 import { TaskData } from '../../types';
 import { getPointsBackgroundColor } from '../../helpers/styleHelpers';
+
+import '../../assets/tasksStyle.css';
 
 interface Props {
   open: boolean;
@@ -30,17 +32,28 @@ interface Props {
 const TaskEditDialog = ({ open, task, onClose, onSave, onDelete, error }: Props) => {
   const [title, setTitle] = useState('');
   const [completed, setCompleted] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
 
   useEffect(() => {
     if (task) {
       setTitle(task.title);
       setCompleted(task.completed);
+      setLocalError(null);
     }
   }, [task]);
 
   const handleSave = () => {
     if (!task) return;
-    onSave({ ...task, title, completed });
+
+    const trimmedTitle = title.trim();
+
+    if (!trimmedTitle) {
+      setLocalError('Title is required');
+      return;
+    }
+
+    setLocalError(null);
+    onSave({ ...task, title: trimmedTitle, completed });
   };
 
   const handleDelete = () => {
@@ -52,37 +65,27 @@ const TaskEditDialog = ({ open, task, onClose, onSave, onDelete, error }: Props)
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          pl: 3,
-          pr: 1,
-          pt: 2,
-        }}
-      >
-        <DialogTitle sx={{ p: 0 }}>Edit task</DialogTitle>
+      <Box className="task-dialog-header">
+        <DialogTitle className="task-dialog-title">Edit Task</DialogTitle>
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </Box>
 
       <DialogContent>
-        {error && <Alert severity="error">{error}</Alert>}
+        {(localError || error) && (
+          <Alert severity="error">{localError || error}</Alert>
+        )}
+
         {task && (
-          <Box sx={{ mb: 2 }}>
+          <Box className="task-points-container">
             <Typography variant="body2" color="text.secondary">
               Points:
             </Typography>
 
             <Box display="flex" alignItems="center" gap={1}>
               {task.points < task.start_points && (
-                <Typography
-                  variant="body1"
-                  color="text.disabled"
-                  sx={{ textDecoration: 'line-through' }}
-                >
+                <Typography variant="body1" className="task-points-line-through">
                   {task.start_points} pts
                 </Typography>
               )}
@@ -90,16 +93,8 @@ const TaskEditDialog = ({ open, task, onClose, onSave, onDelete, error }: Props)
               <Typography
                 variant="body1"
                 color="text.secondary"
-                sx={{
-                  backgroundColor: getPointsBackgroundColor(task.points),
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                  width: 'fit-content',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                }}
+                className="task-points-value"
+                style={{ backgroundColor: getPointsBackgroundColor(task.points) }}
               >
                 {task.points} pts
               </Typography>
@@ -108,12 +103,13 @@ const TaskEditDialog = ({ open, task, onClose, onSave, onDelete, error }: Props)
         )}
 
         <TextField
-          label="title"
+          label="Title"
           fullWidth
           margin="normal"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
+
         <FormControlLabel
           control={
             <Checkbox
@@ -125,13 +121,17 @@ const TaskEditDialog = ({ open, task, onClose, onSave, onDelete, error }: Props)
         />
       </DialogContent>
 
-      <DialogActions sx={{ justifyContent: 'space-between' }}>
+      <DialogActions className="dialog-actions-space-between">
         <IconButton onClick={handleDelete} color="error">
           <DeleteIcon />
         </IconButton>
         <Box>
           <Button onClick={onClose}>Cancel</Button>
-          <Button onClick={handleSave} variant="contained" sx={{ ml: 1 }}>
+          <Button
+            onClick={handleSave}
+            variant="contained"
+            className="dialog-actions-buttons-margin-left"
+          >
             Save
           </Button>
         </Box>

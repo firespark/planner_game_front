@@ -33,8 +33,12 @@ export function useTaskDone({ setTasks, setError }: UseTaskDoneParams) {
       } else {
         setError(data.error || 'Failed to mark task as done');
       }
-    } catch {
-      setError('Request failed');
+    } catch (error) {
+      if (error instanceof Error && error.message) {
+        setError(error.message);
+      } else {
+        setError('Request failed');
+      }
     }
   }
 

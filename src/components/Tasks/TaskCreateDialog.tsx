@@ -7,10 +7,12 @@ import {
   Button,
   Alert,
   IconButton,
-  Box
+  Box,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useState, useEffect } from 'react';
+
+import '../../assets/tasksStyle.css';
 
 interface Props {
   open: boolean;
@@ -22,16 +24,31 @@ interface Props {
 const TaskCreateDialog = ({ open, onClose, onCreate, error }: Props) => {
   const [title, setTitle] = useState('');
   const [points, setPoints] = useState(60);
+  const [localError, setLocalError] = useState<string | null>(null);
 
   useEffect(() => {
     if (open) {
       setTitle('');
       setPoints(60);
+      setLocalError(null);
     }
   }, [open]);
 
   const handleSubmit = () => {
-    onCreate(title.trim(), points);
+    const trimmedTitle = title.trim();
+
+    if (!trimmedTitle) {
+      setLocalError('Title is required');
+      return;
+    }
+
+    if (!points || points <= 0) {
+      setLocalError('Points must be a positive number');
+      return;
+    }
+
+    setLocalError(null);
+    onCreate(trimmedTitle, points);
   };
 
   const handlePointsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,24 +62,17 @@ const TaskCreateDialog = ({ open, onClose, onCreate, error }: Props) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          pl: 3,
-          pr: 1,
-          pt: 2,
-        }}
-      >
-        <DialogTitle sx={{ p: 0 }}>Create Task</DialogTitle>
+      <Box className="task-dialog-header">
+        <DialogTitle className="task-dialog-title">Create Task</DialogTitle>
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </Box>
 
       <DialogContent>
-        {error && <Alert severity="error">{error}</Alert>}
+        {(localError || error) && (
+          <Alert severity="error">{localError || error}</Alert>
+        )}
         <TextField
           autoFocus
           label="Title"

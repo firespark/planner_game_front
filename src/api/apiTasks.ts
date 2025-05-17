@@ -1,9 +1,9 @@
 import { TaskData } from '../types';
+import { handleError } from '../helpers/errorHelpers';
 
-export async function fetchUpdateTask(task: Pick<TaskData, 'id' | 'title' | 'completed'>): Promise<{
-  success: boolean;
-  error?: string;
-}> {
+export async function fetchUpdateTask(
+  task: Pick<TaskData, 'id' | 'title' | 'completed'>
+): Promise<{ success: boolean; error?: string }> {
   const response = await fetch(`/api/tasks/update/${task.id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -13,11 +13,13 @@ export async function fetchUpdateTask(task: Pick<TaskData, 'id' | 'title' | 'com
     }),
   });
 
-  if (!response.ok) {
-    throw new Error('Failed to update task');
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    handleError(response, data, 'Failed to update task');
   }
 
-  return response.json();
+  return data;
 }
 
 export async function fetchMarkTaskDone(taskId: number): Promise<{ success: boolean; error?: string }> {
@@ -27,11 +29,13 @@ export async function fetchMarkTaskDone(taskId: number): Promise<{ success: bool
     body: JSON.stringify({ id: taskId }),
   });
 
-  if (!response.ok) {
-    throw new Error('Failed to mark task as done');
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    handleError(response, data, 'Failed to mark task as done');
   }
 
-  return response.json();
+  return data;
 }
 
 export async function fetchDeleteTask(id: number): Promise<{ success: boolean; error?: string }> {
@@ -39,11 +43,13 @@ export async function fetchDeleteTask(id: number): Promise<{ success: boolean; e
     method: 'DELETE',
   });
 
-  if (!response.ok) {
-    throw new Error('Failed to delete task');
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    handleError(response, data, 'Failed to delete task');
   }
 
-  return response.json();
+  return data;
 }
 
 export async function fetchCreateTask(
@@ -58,9 +64,11 @@ export async function fetchCreateTask(
     body: JSON.stringify({ title, points, date, project_id }),
   });
 
-  if (!response.ok) {
-    throw new Error('Failed to create task');
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    handleError(response, data, 'Failed to create task');
   }
 
-  return response.json();
+  return data;
 }

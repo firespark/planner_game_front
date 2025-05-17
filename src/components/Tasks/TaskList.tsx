@@ -10,6 +10,9 @@ import { useTaskDelete } from '../../hooks/useTaskDelete';
 import { useTaskCreate } from '../../hooks/useTaskCreate';
 import { useTaskDone } from '../../hooks/useTaskDone';
 
+import '../../assets/tasksStyle.css';
+import { getTodayBoxShadowClass } from '../../helpers/styleHelpers';
+
 interface Props {
   tasks: TaskData[];
   date: string;
@@ -37,24 +40,18 @@ const TaskList = ({ tasks, date, project_id, isPast, isToday }: Props) => {
     closeEditDialog,
     setError,
   });
-  const { deleteTask } = useTaskDelete({setTasks, closeEditDialog, setError});
-  const { createTask } = useTaskCreate({date, project_id, setTasks, setCreateDialogOpen, setError});
-  const { markAsDone } = useTaskDone({setTasks, setError});
+  const { deleteTask } = useTaskDelete({ setTasks, closeEditDialog, setError });
+  const { createTask } = useTaskCreate({ date, project_id, setTasks, setCreateDialogOpen, setError });
+  const { markAsDone } = useTaskDone({ setTasks, setError });
+
+  const paperClasses = ['task-list-paper'];
+  if (isPast) paperClasses.push('past');
+  else if (isToday) paperClasses.push('today');
+
+  const glowClass = getTodayBoxShadowClass(isToday);
 
   return (
-    <Paper
-      elevation={3}
-      sx={{
-        backgroundColor: isPast ? '#e0e0e0' : isToday ? '#e7fbe7' : 'white',
-        opacity: isPast ? 0.5 : 1,
-        padding: 1,
-        marginTop: 1,
-        borderRadius: 2,
-        boxShadow: isToday
-          ? '0 0 8px 2px rgba(0, 128, 0, 0.7)'
-          : undefined,
-      }}
-    >
+    <Paper elevation={3} className={`${paperClasses.join(' ')} ${glowClass}`}>
       <Stack spacing={2}>
         {!isPast && <TaskCreateButton onClick={() => setCreateDialogOpen(true)} />}
         <TaskListContent
@@ -81,6 +78,5 @@ const TaskList = ({ tasks, date, project_id, isPast, isToday }: Props) => {
     </Paper>
   );
 };
-
 
 export default TaskList;
