@@ -1,5 +1,5 @@
 import { Paper, Typography } from '@mui/material';
-import { SlotData } from '../../types';
+import { SlotData, TaskData } from '../../types';
 import { parseLocalDate } from '../../helpers/dateHelpers';
 import TaskList from '../Tasks/TaskList';
 import { getTodayBoxShadowClass } from '../../helpers/styleHelpers';
@@ -9,9 +9,11 @@ import '../../assets/slotsStyle.css';
 interface Props {
   slot: SlotData;
   project_id: number;
+  onTaskUpdate: (task: TaskData) => void;
+  onTaskCreate: (task: TaskData) => void;
 }
 
-const Slot = ({ slot, project_id }: Props) => {
+const Slot = ({ slot, project_id, onTaskUpdate, onTaskCreate }: Props) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -38,6 +40,8 @@ const Slot = ({ slot, project_id }: Props) => {
         project_id={project_id}
         isPast={isPast}
         isToday={isToday}
+        onTaskUpdate={onTaskUpdate}
+        onTaskCreate={onTaskCreate}
       />
     </Paper>
   );

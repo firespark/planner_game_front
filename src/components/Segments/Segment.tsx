@@ -1,5 +1,5 @@
 import { Paper, Typography, Box } from '@mui/material';
-import { SegmentData } from '../../types';
+import { SegmentData, TaskData } from '../../types';
 import Slot from '../Slots/Slot';
 import { getSegmentColor } from '../../helpers/styleHelpers';
 
@@ -10,9 +10,11 @@ interface Props {
   project_id: number;
   isActive: boolean;
   onActivate: () => void;
+  onTaskUpdate: (task: TaskData) => void;
+  onTaskCreate: (task: TaskData) => void;
 }
 
-const Segment = ({ segment, project_id, isActive, onActivate }: Props) => {
+const Segment = ({ segment, project_id, isActive, onActivate, onTaskUpdate, onTaskCreate }: Props) => {
   const backgroundColor = getSegmentColor(segment.type);
 
   return (
@@ -31,7 +33,12 @@ const Segment = ({ segment, project_id, isActive, onActivate }: Props) => {
         <Box className="slots-container">
           {segment.slots.map((slot, index) => (
             <Box key={index} className="slot-wrapper">
-              <Slot slot={slot} project_id={project_id} />
+              <Slot
+                slot={slot}
+                project_id={project_id}
+                onTaskUpdate={onTaskUpdate}
+                onTaskCreate={onTaskCreate}
+              />
             </Box>
           ))}
         </Box>

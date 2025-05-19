@@ -6,9 +6,10 @@ interface UseTaskUpdateParams {
   setTasks: React.Dispatch<React.SetStateAction<TaskData[]>>;
   closeEditDialog: () => void;
   setError: (error: string) => void;
+  onUpdateSuccess: (task: TaskData) => void;
 }
 
-export function useTaskUpdate({ setTasks, closeEditDialog, setError }: UseTaskUpdateParams) {
+export function useTaskUpdate({ setTasks, closeEditDialog, setError, onUpdateSuccess }: UseTaskUpdateParams) {
   const { totalPoints, setTotalPoints } = useProjectContext();
 
   function updateTask(updatedTask: TaskData) {
@@ -44,6 +45,7 @@ export function useTaskUpdate({ setTasks, closeEditDialog, setError }: UseTaskUp
             setTotalPoints(totalPoints + pointsDelta);
           }
 
+          onUpdateSuccess(updatedTask);
           closeEditDialog();
         } else {
           setError(data.error || 'Failed to update task');

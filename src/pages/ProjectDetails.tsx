@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { SegmentData, ProjectData } from '../types';
+import { SegmentData, ProjectData, TaskData } from '../types';
 import { useProjectContext } from '../context/ProjectContext';
 import { fetchProjectDetails } from '../api/apiProjects';
 
@@ -21,6 +21,33 @@ const ProjectDetails = () => {
   const [project, setProject] = useState<ProjectData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  const addTaskToSegments = (newTask: TaskData) => {
+    setSegments(prevSegments =>
+      prevSegments.map(segment => ({
+        ...segment,
+        slots: segment.slots.map(slot =>
+          slot.date === newTask.date
+            ? { ...slot, tasks: [newTask].concat(slot.tasks) }
+            : slot
+        ),
+      }))
+    );
+  };
+
+  const updateTaskInSegments = (updatedTask: TaskData) => {
+    setSegments(prevSegments =>
+      prevSegments.map(segment => ({
+        ...segment,
+        slots: segment.slots.map(slot => ({
+          ...slot,
+          tasks: slot.tasks.map(task =>
+            task.id === updatedTask.id ? updatedTask : task
+          ),
+        })),
+      }))
+    );
+  };
 
   const fetchedRef = useRef(false);
 
@@ -64,9 +91,21 @@ const ProjectDetails = () => {
 
       {projectId !== null && segments.length > 0 && (
         <>
-          <ProjectProgress totalPoints={totalPoints} maxPoints={maxPoints} minimumPercentage={project.minimum_percentage} />
-          <ProjectDates startDate={project.start_date} endDate={project.end_date} />
-          <SegmentList segments={segments} project_id={projectId} />
+          <ProjectProgress
+            totalPoints={totalPoints}
+            maxPoints={maxPoints}
+            minimumPercentage={project.minimum_percentage}
+          />
+          <ProjectDates
+            startDate={project.start_date}
+            endDate={project.end_date}
+          />
+          <SegmentList
+            segments={segments}
+            project_id={projectId}
+            onTaskUpdate={updateTaskInSegments}
+            onTaskCreate={addTaskToSegments}
+          />
         </>
       )}
     </div>

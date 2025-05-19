@@ -8,6 +8,7 @@ interface UseTaskCreateParams {
   setTasks: React.Dispatch<React.SetStateAction<TaskData[]>>;
   setCreateDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setError: (error: string) => void;
+  onCreateSuccess: (task: TaskData) => void;
 }
 
 export function useTaskCreate({
@@ -16,6 +17,7 @@ export function useTaskCreate({
   setTasks,
   setCreateDialogOpen,
   setError,
+  onCreateSuccess,
 }: UseTaskCreateParams) {
   const { maxPoints, setMaxPoints } = useProjectContext();
 
@@ -34,8 +36,12 @@ export function useTaskCreate({
         };
 
         setTasks(prev => prev.concat(newTask));
+
         setCreateDialogOpen(false);
+
         setMaxPoints(maxPoints + points);
+
+        onCreateSuccess(newTask);
       } else {
         setError(data.error || 'Failed to create task');
       }

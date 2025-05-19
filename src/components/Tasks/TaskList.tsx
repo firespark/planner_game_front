@@ -19,9 +19,11 @@ interface Props {
   project_id: number;
   isPast: boolean;
   isToday: boolean;
+  onTaskUpdate: (task: TaskData) => void;
+  onTaskCreate: (task: TaskData) => void;
 }
 
-const TaskList = ({ tasks, date, project_id, isPast, isToday }: Props) => {
+const TaskList = ({ tasks, date, project_id, isPast, isToday, onTaskUpdate, onTaskCreate }: Props) => {
   const {
     tasks: currentTasks,
     setTasks,
@@ -39,9 +41,21 @@ const TaskList = ({ tasks, date, project_id, isPast, isToday }: Props) => {
     setTasks,
     closeEditDialog,
     setError,
+    onUpdateSuccess: onTaskUpdate,
   });
-  const { deleteTask } = useTaskDelete({ setTasks, closeEditDialog, setError });
-  const { createTask } = useTaskCreate({ date, project_id, setTasks, setCreateDialogOpen, setError });
+  const { deleteTask } = useTaskDelete({
+    setTasks,
+    closeEditDialog,
+    setError
+  });
+  const { createTask } = useTaskCreate({
+    date,
+    project_id,
+    setTasks,
+    setCreateDialogOpen,
+    setError,
+    onCreateSuccess: onTaskCreate,
+  });
   const { markAsDone } = useTaskDone({ setTasks, setError });
 
   const paperClasses = ['task-list-paper'];
